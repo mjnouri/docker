@@ -1,0 +1,70 @@
+# install docker
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y docker-ce docker-ce-cli containerd.io
+sudo systemctl start docker
+sudo usermod -aG docker $USER
+sudo systemctl enable docker
+docker version
+
+# install docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose version
+
+# run containers
+docker container run -d -p 8080:80 --name nginx nginx
+docker container run -dit -p 8080:80 --name nginx nginx bash
+docker container exec -it nginx bash
+docker container inspect nginx
+
+# networking
+docker network create frontend-net
+docker network create backend-net
+docker container run -d -p 80:80 --net frontend-net --net backend-net --name wordpress wordpress
+docker container run -d --net backend-net mysql
+docker network inspect frontend-net
+docker container inspect wordpress
+docker container inspect --format '{{ .NetworkSettings.IPAddress }}' wordpress
+docker container run --rm net frontend-net centos ping wordpress
+
+# volumes
+docker container run -d -v /home/user/data:/usr/share/nginx/html -p 80:80 --name nginx nginx
+docker container run -d -v mysql-db:/var/lib/mysql --name mysql mysql
+docker volume inspect mysql
+
+# environment variables
+docker container run -d --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=True mysql
+
+# dashboard stuff
+docker container ls -a
+docker volume ls
+docker image ls
+docker network ls
+
+# container activity
+docker container top [container id]
+docker container stats [container id]
+
+# images
+docker image pull nginx
+docker image inspect nginx
+docker image history nginx
+docker image tag nginx same-nginx
+
+# Dockerfile
+docker image build -t user\my-nginx .
+
+# docker hub
+docker login
+docker image push user\my-nginx
+
+# docker-compose
+docker-compose up -d
+docker-compose down
+
+# cleanup
+docker container rm -f $(docker container ls -aq)
+docker image rm $(docker container ls -aq)
+docker network rm frontend-net
+docker network rm backend-net
