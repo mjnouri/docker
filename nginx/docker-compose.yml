@@ -1,0 +1,9 @@
+# docker container run -p 80:80 --name my_nginx my_nginx_image
+
+version: '2'
+services:
+  my_nginx:
+    build: .
+    image: my_nginx_image
+    ports:
+      - '80:80'

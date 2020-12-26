@@ -1,3 +1,9 @@
+# docker network create wordpress_network
+
+# docker container run -d -p 80:80 --name wordpress --net wordpress_network -e WORDPRESS_DB_HOST=mysql -e WORDPRESS_DB_NAME=wordpress -e WORDPRESS_DB_USER=example -e WORDPRESS_DB_PASSWORD=examplePW -v $pwd/wordpress-data:/var/www/html wordpress
+
+# docker container run -d --name mysql --net wordpress_network -e MYSQL_ROOT_PASSWORD=examplerootPW -e MYSQL_DATABASE=wordpress -e MYSQL_USER=example -e MYSQL_PASSWORD=examplePW -v mysql-data:/var/lib/mysql mysql
+
 version: '2'
 services:
  wordpress:
